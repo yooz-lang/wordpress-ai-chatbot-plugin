@@ -1,0 +1,5 @@
+# Block access to all files in this directory
+<Files "product-info.yooz">
+    Order Allow,Deny
+    Deny from all
+</Files>

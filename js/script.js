@@ -1,24 +1,21 @@
 var ischatopen = false;
-var ele = document.getElementById("chatbar");
+var ele = document.getElementById("yooz_chatbar");
 
 function openChatBox() {
     if (ischatopen == false) {
-        ele.classList.add("toggle");
+        ele.classList.add("yooz_toggle");
         ischatopen = true;
-        document.getElementById("chatOpen").classList.remove("fa-comments");
-        document.getElementById("chatOpen").classList.add("fa-times");
-
     }
     else {
-        ele.classList.remove("toggle");
+        ele.classList.remove("yooz_toggle");
         ischatopen = false;
-        document.getElementById("chatOpen").classList.add("fa-comments");
-        document.getElementById("chatOpen").classList.remove("fa-times");
+        document.getElementById("yooz_chatOpen").classList.add("yooz_fa-comments");
+        document.getElementById("yooz_chatOpen").classList.remove("yooz_fa-times");
     }
 }
 
 
-class YouzParser {
+class YoozParser {
     constructor() {
         this.input_data_string = null;
         this.patterns = [];
@@ -47,12 +44,14 @@ class YouzParser {
             const userPattern = match[1].trim();
             const botResponses = match[2].split('_').map(response => response.trim());
             if (userPattern.startsWith('{')) {
-                const keywords = userPattern.slice(1, -1).split('،').map(keyword => keyword.trim());
+                // الگوی کلیدواژه‌ها
+                const keywords = userPattern.slice(1, -1).split('،').map(keyword => keyword.split('/').map(k => k.trim()));
                 this.keywords.push({ keywords, botResponses });
             } else {
                 this.patterns.push({ userPattern, botResponses });
             }
         }
+
 
         const stopWordsRegex = /-\s*\{\s*(.*?)\s*\}/gs;
         while ((match = stopWordsRegex.exec(input)) !== null) {
@@ -119,8 +118,11 @@ class YouzParser {
     }
 
     containsKeywords(messageWords, keywords) {
-        return keywords.every(keyword => messageWords.includes(keyword));
+        return keywords.every(keywordGroup => {
+            return keywordGroup.some(keyword => messageWords.includes(keyword));
+        });
     }
+
 
     getAdditionalResponses(initialResponse, userMessage) {
         let additionalResponses = initialResponse;
@@ -210,7 +212,6 @@ class YouzParser {
                 let items = between.split('،');
                 for (let i = 0; i < items.length; i++) { items[i] = items[i].trim(); }
                 let collection_name = line.slice(0, start_index).trim();
-                //console.log(items);
                 this.collections[collection_name] = items;
             }
         }
@@ -234,33 +235,18 @@ class YouzParser {
     }
 }
 
-let youzParser = new YouzParser();
+
+let yoozParser = new YoozParser();
 let inputCode = myChatPluginData.inputCode;
 
 
-youzParser.parse(inputCode);
-
-function showResponseAndPattern(userMessage) {
-    const response = youzParser.getResponse(userMessage);
-    //console.log(response);
-    let mathched_pattern = youzParser.lastMatchedPattern;
-
-    let full_text = '';
-    {
-        let keys = Object.keys(mathched_pattern);
-        for (let key of keys) {
-            let value = mathched_pattern[key];
-            full_text += '\n' + value;
-        }
-    }
-    youzParser.define_temp_vars(full_text);
-}
+yoozParser.parse(inputCode);
 
 let messageCounter = 0;
 const messages = [];
 
 function sendMessage() {
-    const inputElement = document.querySelector('.chat-input');
+    const inputElement = document.querySelector('.yooz_chat-input');
     let messageText = inputElement.value;
 
     if (messageText.trim() !== "") {
@@ -271,42 +257,45 @@ function sendMessage() {
         // نمایش پیام کاربر
         displayMessage(messageText, 'user');
 
-        // دریافت پاسخ از تابع youzParser
-        let replace_collections_with_patterns = youzParser.check_for_collections_pattern(messageText);
+        let replace_collections_with_patterns = yoozParser.check_for_collections_pattern(messageText);
         messageText = replace_collections_with_patterns;
-        //console.log(messageText);
-        let response = youzParser.getResponse(messageText);
-        response = youzParser.replace_temp_vars(response);
+
+        let response = yoozParser.getResponse(messageText);
+        response = yoozParser.replace_temp_vars(response);
+
         // نمایش پاسخ در صفحه
         displayMessage(response, 'bot');
 
-        showResponseAndPattern(messageText);
+        // ارسال پیام و پاسخ به PHP جهت ذخیره در فایل متنی
+        saveChatLog(messageText, response);
 
-        inputElement.value = ""; // Clear the input field
+        inputElement.value = ""; // پاک کردن فیلد ورودی
     }
 }
 
+
+
 function displayMessage(text, sender) {
-    const chatWrapper = document.querySelector('.chat-wrapper');
+    const chatWrapper = document.querySelector('.yooz_chat-wrapper');
     const messageWrapper = document.createElement('div');
-    messageWrapper.className = sender === 'user' ? 'message-wrapper reverse' : 'message-wrapper';
+    messageWrapper.className = sender === 'user' ? 'yooz_message-wrapper yooz_reverse' : 'yooz_message-wrapper';
 
     const img = document.createElement('img');
-    img.className = 'message-pp';
-    img.src = sender === 'user' ? 'https://yooz.run/pb_img//profile.png' : 'https://yooz.run/pb_img//bot.png'; // Change image based on sender
+    img.className = 'yooz_message-pp';
+    img.src = sender === 'user' ? 'https://yooz.run/pb_img/profile.png' : 'https://yooz.run/pb_img/bot.png'; // Change image based on sender
     img.alt = sender === 'user' ? 'profile-pic' : 'bot-pic';
 
     const messageBoxWrapper = document.createElement('div');
-    messageBoxWrapper.className = 'message-box-wrapper';
+    messageBoxWrapper.className = 'yooz_message-box-wrapper';
 
     const messageBox = document.createElement('div');
-    messageBox.className = 'message-box';
+    messageBox.className = 'yooz_message-box';
     messageBox.style.textAlign = 'right';
     messageBox.style.fontFamily = 'yekan';
 
     const mo = document.createElement('div');
-    mo.className = 'mo';
-    mo.textContent = text;
+    mo.className = 'yooz_mo';
+    mo.innerHTML = text; 
 
     messageBox.appendChild(mo);
     messageBoxWrapper.appendChild(messageBox);
@@ -315,9 +304,10 @@ function displayMessage(text, sender) {
     chatWrapper.appendChild(messageWrapper);
 }
 
-document.querySelector('.send').addEventListener('click', sendMessage);
 
-let title = document.querySelectorAll(".chat-list-header");
+document.querySelector('.yooz_send').addEventListener('click', sendMessage);
+
+let title = document.querySelectorAll(".yooz_chat-list-header");
 let totalHeight = 0;
 
 for (let i = 0; i < title.length; i++) {
@@ -338,7 +328,7 @@ for (let i = 0; i < title.length; i++) {
     });
 }
 
-const themeColors = document.querySelectorAll('.theme-color');
+const themeColors = document.querySelectorAll('.yooz_theme-color');
 
 themeColors.forEach(themeColor => {
     themeColor.addEventListener('click', e => {
@@ -354,17 +344,76 @@ let buttonColor = myChatPluginData.buttonColor;
 jQuery(document).ready(function($) {
 
     // تنظیم رنگ دکمه
-    $('.chat_button').css('background-color', myChatPluginData.buttonColor);
+    $('.yooz_chat_button').css('background-color', myChatPluginData.buttonColor);
 
+    // فاصله از پایین صفحه
+    $('.yooz_chat_button').css('bottom', myChatPluginData.marginbottom + 'px');
+    $('.yooz_chat_box').css('bottom', (parseInt(myChatPluginData.marginbottom, 10) + 85) + 'px');
+    
     // تنظیم placeholder برای پرسش اولیه
     $('.chat-input').attr('placeholder', myChatPluginData.initialQuestion);
+    document.getElementById('ini-msg').innerText =  myChatPluginData.initialmsg ;
+
 
     // تنظیم SVG دکمه
     if (myChatPluginData.buttonIconUrl) {
-        $('#btn-id').html(myChatPluginData.buttonIconUrl);
+        $('#yooz_btn-id').html(myChatPluginData.buttonIconUrl);
+    }
+        // تنظیم مکان دکمه
+        function applyChatBoxSpacing() {
+            if (window.innerWidth >= 680) { // بررسی عرض صفحه
+                if (myChatPluginData.buttonPosition === 'left') {
+                    $('.yooz_chat_button').css({
+                        right: 'auto',
+                        left: '0px'
+                    });
+                    $('.yooz_chat_box').css({
+                        right: 'auto',
+                        left: '70px' // فاصله 100 پیکسلی
+                    });
+                } else {
+                    $('.yooz_chat_button').css({
+                        left: 'auto',
+                        right: '0px'
+                    });
+                    $('.yooz_chat_box').css({
+                        left: 'auto',
+                        right: '70px' // فاصله 100 پیکسلی
+                    });
+                }
+            } else {
+                // تنظیمات برای عرض بیشتر از 680 پیکسل
+                if (myChatPluginData.buttonPosition === 'left') {
+                    $('.yooz_chat_button').css({
+                        right: 'auto',
+                        left: '20px'
+                    });
+                    $('.yooz_chat_box').css({
+                        right: 'auto',
+                        left: '20px' // فاصله پیش‌فرض
+                    });
+                } else {
+                    $('.yooz_chat_button').css({
+                        left: 'auto',
+                        right: '20px'
+                    });
+                    $('.yooz_chat_box').css({
+                        left: 'auto',
+                        right: '20px' // فاصله پیش‌فرض
+                    });
+                }
+            }
+        }
+        
+        // فراخوانی هنگام بارگذاری و تغییر اندازه صفحه
+        $(window).on('resize', applyChatBoxSpacing);
+        $(document).ready(applyChatBoxSpacing);
+        
+});
+document.querySelector('.yooz_chat-input').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // جلوگیری از ارسال فرم پیش‌فرض
+        document.querySelector('.yooz_send').click(); // کلیک روی دکمه ارسال
     }
 });
-
-
-
 

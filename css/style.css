@@ -1,0 +1,377 @@
+body {
+  --app-bg: #fff;
+  --box-color: #f5f8fc;
+  --box-border: #e7edf5;
+  --text-dark: #1a2f45;
+  --text-light: #445e78;
+  --chat-box-dark: #1b243b;
+  --chat-box-light: #fff;
+  --button-bg: #004dfc;
+  --button-text: #fff;
+  --toggle-bg: #004dfc;
+  --toggle-bg-off: #6895A3;
+  --toggle-ball: #fff;
+  --logo-path-1: #A0C9E1;
+  --logo-path-2: #18689C;
+  --list-item-active: #e5effb;
+  --number-bg: #6895A3;
+  --message-box-1: #fff;
+  --message-box-2: #1a233b;
+  --chat-input: #f5f8fc;
+  --border-light: #e5e6eb;
+  --info-box-1: rgba( 217, 228, 252 ,1);
+  --info-box-2: rgba( 226, 246, 243 ,1);
+  --info-box-3: #f7f3ff;
+  --info-box-4: #fff1e9;
+  --box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  --info-box-3: #b3a5ce;
+  --info-box-4: #ffceb3;
+  --scrollbar-thumb: linear-gradient(to top, rgba(131, 164, 212, .5), rgb(182, 188 ,255 , 0.4));
+  --box-color: #f8f1f1;
+  --button-bg: #1a233b;
+  --logo-path-1: #e8d5db;
+  --logo-path-2: #6895A3;
+  --toggle-bg: #1a233b;
+}
+
+.yooz_app-main {
+  z-index: 1500;
+  flex: 3;
+  height: 100%;
+  background-color: var(--box-color);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  transition: 0.2s;
+  background-color: white;
+}
+.yooz_app-main-header {
+  position: sticky;
+  top: 0;
+  background-color: var(--box-color);
+  border: 1px solid var(--box-border);
+}
+
+.yooz_chat-wrapper {
+  overflow: auto;
+}
+
+.yooz_chat-input {
+  border: none;
+  outline: none;
+  height: 32px;
+  flex: 1;
+  margin-right: 4px;
+  font-family: yekan;
+  background-color: var(--chat-input);
+  color: var(--text-dark);
+}
+.yooz_chat-input:placeholder {
+  color: var(--text-light);
+  font-size: 12px;
+}
+.yooz_chat-input-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--box-shadow);
+  margin-top: auto;
+  border-radius: 6px;
+  padding: 12px;
+  background-color: var(--chat-input);
+}
+
+.yooz_input-wrapper {
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  font-size: 12px;
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  padding: 0 6px 0 12px;
+  justify-content: space-between;
+  margin: 0 8px;
+  background-color: var(--chat-input);
+}
+
+.yooz_chat-attachment-btn {
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  opacity: 0.7;
+}
+
+.yooz_message-wrapper {
+  display: flex;
+  align-items: flex-start;
+  padding-bottom: 20px;
+}
+.yooz_message-wrapper.yooz_reverse {
+  justify-content: flex-end;
+}
+.yooz_message-wrapper.yooz_reverse .yooz_message-box {
+  background-color: var(--message-box-2);
+  color: #fff;
+}
+.yooz_message-wrapper.yooz_reverse .yooz_message-box-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.yooz_message-wrapper.yooz_reverse .yooz_message-pp {
+  order: 2;
+}
+
+.yooz_message-pp {
+  width: 40px;
+  height: 40px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  flex-shrink: 0;
+}
+
+.yooz_message-box {
+  background-color: var(--message-box-1);
+  box-shadow: var(--box-shadow);
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 12px;
+  line-height: 16px;
+  width: auto;
+  max-width: 94%;
+  color: var(--text-dark);
+}
+.yooz_mo{
+  overflow: hidden;
+  animation: typing 1.5s forwards;
+}
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+.yooz_message-box-wrapper {
+  margin: 0 12px;
+}
+.yooz_message-box-wrapper span {
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--text-light);
+  opacity: 0.6;
+}
+.yooz_theme-color {
+  width: 24px;
+  height: 24px;
+  margin-left: 4px;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  color: #fff;
+  cursor: pointer;
+}
+.yooz_theme-color.yooz_active {
+  border: 1px solid #477eff;
+  box-shadow: 0 0 0 3px rgba(71, 126, 255, 0.2);
+}
+
+@media screen and (max-width: 680px) {
+  .yooz_app-main {
+    max-height: 100%;
+   max-width: 100%;
+  }
+  .yooz_chat_button{
+    margin-left: -5px;
+    margin-right: -5px;
+  }
+}
+
+@media screen and (min-width: 680px) {
+  .yooz_chat_button{
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+}
+
+.yooz_chat_button {
+  position: fixed;
+  z-index: 10000;
+  bottom: 0px;
+  right: 0px;
+  padding: 15px 11px 10px 10px;
+  margin-bottom: 15px;
+  height: 75px;
+  width: 75px;
+  image-rendering: auto;
+  text-align: center;
+  background-color: rgb(52, 248, 248);
+  border-radius: 100px;
+  border: none;
+  font-size: 1.6rem;
+  color: rgb(251, 251, 251);
+  cursor: pointer;
+  transition: 0.5s ease-in-out;
+}
+.yooz_chat_button:hover {
+  border: 1px solid #Eff;
+  color: rgb(255, 255, 255);
+}
+.yooz_chat_button:focus, .yooz_chat_button:active {
+  outline: none;
+}
+
+.yooz_chat_box {
+  margin: 0px 12px 10px 0px;
+  position: fixed;
+  max-height: 100%;
+  max-width: 100%;
+  height: 500px;
+  width: 350px;
+  background-color: #fff;
+  bottom: 100px;
+  right: 100px;
+  display: none;
+  z-index: 1000;
+  border-radius: 15px;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.45);
+}
+.yooz_chat_box_header {
+  padding: 20px;
+  background: #e1e3e8;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  text-align: center;
+  color: #77E;
+  font-weight: 600;
+  letter-spacing: 0.25rem;
+}
+.yooz_chat_box_body {
+  padding: 16px;
+  height: 100%;
+  overflow-y: scroll;
+  height: 380px;
+  scroll-behavior: smooth;
+}
+.yooz_chat_box_body_self {
+  padding: 16px 15px;
+  float: right;
+  border-radius: 25px;
+  margin-right: 10px;
+  background: #5A5EB9;
+  color: white;
+  margin: 10px 0;
+  clear: both;
+  max-width: 75%;
+}
+.yooz_chat_box_body_other {
+  background: whitesmoke;
+  padding: 16px 15px;
+  color: #666;
+  max-width: 75%;
+  float: left;
+  margin-left: 10px;
+  margin: 10px 0;
+  position: relative;
+  margin-bottom: 20px;
+  border-radius: 25px;
+  clear: both;
+}
+.yooz_chat_box_body::-webkit-scrollbar {
+  width: 5px;
+  background-color: #F5F5F5;
+}
+.yooz_chat_box_body::-webkit-scrollbar-thumb {
+  background-color: #77E;
+}
+.yooz_chat_box_footer {
+  max-width: 100%;
+  height: 80px;
+  position: absolute;
+  bottom: -31px;
+}
+.yooz_chat_box_footer button {
+  position: absolute;
+  bottom: 30px;
+  font-size: 1.4rem;
+  background: white;
+  box-shadow: none;
+  border: none;
+  border-bottom-right-radius: 16px;
+  color: #5A5EB9;
+  padding: 12px 15px;
+  left: 300px;
+}
+.yooz_chat_box_footer button:focus {
+  outline: none;
+}
+
+.yooz_toggle {
+  display: block;
+}
+
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 10%, 0);
+    transform: translate3d(0, 10%, 0);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+.fadeInUp {
+  -webkit-animation-name: fadeInUp;
+  animation-name: fadeInUp;
+}
+
+.yooz_brand {
+  text-align: center !important;
+  margin-top: 25px;
+}
+.yooz_brand a {
+  color: white;
+  text-decoration: none;
+}
+
+@media only screen and (max-width: 457px) {
+  .yooz_chat_box {
+    position: fixed;
+    max-height: 100%;
+    max-width: 90%;
+    z-index: 100000;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    bottom: 0px;
+    padding: 0px;
+  }
+  .yooz_chat_box_header {
+    padding: 0px;
+  }
+  #yooz_chatbar {
+    width: 100%;
+    position: fixed;
+    bottom: 8.5rem;
+  }
+}
+
+
+@font-face {
+  font-family: yekan;
+  src: url(../font/Yekan.woff);
+}
